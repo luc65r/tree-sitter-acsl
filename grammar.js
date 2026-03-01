@@ -106,8 +106,6 @@ module.exports = grammar({
       $.preproc_if,
       $.preproc_ifdef,
       $.preproc_include,
-      $.preproc_def,
-      $.preproc_function_def,
       $.preproc_call,
     ),
 
@@ -123,8 +121,6 @@ module.exports = grammar({
       $.preproc_if,
       $.preproc_ifdef,
       $.preproc_include,
-      $.preproc_def,
-      $.preproc_function_def,
       $.preproc_call,
     ),
 
@@ -139,25 +135,6 @@ module.exports = grammar({
         alias($.preproc_call_expression, $.call_expression),
       )),
       token.immediate(/\r?\n/),
-    ),
-
-    preproc_def: $ => seq(
-      preprocessor('define'),
-      field('name', $.identifier),
-      field('value', optional($.preproc_arg)),
-      token.immediate(/\r?\n/),
-    ),
-
-    preproc_function_def: $ => seq(
-      preprocessor('define'),
-      field('name', $.identifier),
-      field('parameters', $.preproc_params),
-      field('value', optional($.preproc_arg)),
-      token.immediate(/\r?\n/),
-    ),
-
-    preproc_params: $ => seq(
-      token.immediate('('), commaSep(choice($.identifier, '...')), ')',
     ),
 
     preproc_call: $ => seq(
@@ -733,8 +710,6 @@ module.exports = grammar({
 
     _field_declaration_list_item: $ => choice(
       $.field_declaration,
-      $.preproc_def,
-      $.preproc_function_def,
       $.preproc_call,
       alias($.preproc_if_in_field_declaration_list, $.preproc_if),
       alias($.preproc_ifdef_in_field_declaration_list, $.preproc_ifdef),
