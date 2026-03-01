@@ -1345,7 +1345,7 @@ module.exports = grammar({
     null: _ => choice('NULL', 'nullptr'),
 
     identifier: _ =>
-      /(\p{XID_Start}|\$|_|\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})(\p{XID_Continue}|\$|\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})*/,
+      /(\p{XID_Start}|\\|\$|_|\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})(\p{XID_Continue}|\$|\\u[0-9A-Fa-f]{4}|\\U[0-9A-Fa-f]{8})*/,
 
     _type_identifier: $ => alias(
       $.identifier,
