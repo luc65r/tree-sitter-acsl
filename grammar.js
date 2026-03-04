@@ -11,8 +11,8 @@
 
 const PREC = {
   PAREN_DECLARATOR: -10,
-  NAMING: -4
-  BINDING: -3
+  NAMING: -4,
+  BINDING: -3,
   ASSIGNMENT: -2,
   CONDITIONAL: -1,
   DEFAULT: 0,
