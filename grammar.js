@@ -91,18 +91,11 @@ module.exports = grammar({
   word: $ => $.identifier,
 
   rules: {
-    translation_unit: $ => repeat($._top_level_item),
+    acsl_annotation: $ => repeat($._top_level_item),
 
     // Top level items are block items with the exception of the expression statement
     _top_level_item: $ => choice(
-      $.function_definition,
-      alias($._old_style_function_definition, $.function_definition),
-      $.linkage_specification,
-      $.declaration,
-      $._top_level_statement,
-      $.attributed_statement,
-      $.type_definition,
-      $._empty_declaration,
+      $.requires_clause,
       $.preproc_if,
       $.preproc_ifdef,
       $.preproc_include,
@@ -122,6 +115,18 @@ module.exports = grammar({
       $.preproc_ifdef,
       $.preproc_include,
       $.preproc_call,
+    ),
+
+    clause_kind: _ => choice(
+      'check',
+      'admit',
+    ),
+
+    requires_clause: $ => seq(
+      optional($.clause_kind),
+      'requires',
+      $.expression,
+      ';',
     ),
 
     // Preprocesser
@@ -553,6 +558,7 @@ module.exports = grammar({
     ),
 
     type_qualifier: $ => choice(
+      '\\ghost',
       'const',
       'constexpr',
       'volatile',
@@ -933,6 +939,10 @@ module.exports = grammar({
     ),
 
     _expression_not_binary: $ => choice(
+      $.bitwise_implies_expression,
+      $.logical_implies_expression,
+      $.binding_expression,
+      $.quantification_expression,
       $.conditional_expression,
       $.assignment_expression,
       $.unary_expression,
@@ -987,6 +997,36 @@ module.exports = grammar({
       $.parenthesized_expression,
     ),
 
+    bitwise_implies_expression: $ => prec.right(PREC.BITWISE_IMPLIES, seq(
+      field('left', $.expression),
+      field('operator', '-->'),
+      field('right', $.expression),
+    )),
+
+    logical_implies_expression: $ => prec.right(PREC.LOGICAL_IMPLIES, seq(
+      field('left', $.expression),
+      field('operator', '==>'),
+      field('right', $.expression),
+    )),
+
+    binding_expression: $ => prec.left(PREC.BINDING, seq(
+      '\\let',
+      commaSep1(seq(
+        $.identifier,
+        '=',
+        $.expression,
+      )),
+      ';',
+    )),
+
+    quantification_expression: $ => prec.left(PREC.BINDING, seq(
+      choice('\\forall', '\\exists'),
+      commaSep1(
+        $.declaration,
+      ),
+      ';',
+    )),
+
     assignment_expression: $ => prec.right(PREC.ASSIGNMENT, seq(
       field('left', $._assignment_left_expression),
       field('operator', choice(
@@ -1035,6 +1075,10 @@ module.exports = grammar({
         ['<', PREC.RELATIONAL],
         ['<<', PREC.SHIFT],
         ['>>', PREC.SHIFT],
+        ['^^', PREC.LOGICAL_XOR],
+        ['*^', PREC.LIST_REPETITION],
+        ['<-->', PREC.BITWISE_EQUIV],
+        ['<==>', PREC.LOGICAL_EQUIV],
       ];
 
       return choice(...table.map(([operator, precedence]) => {
