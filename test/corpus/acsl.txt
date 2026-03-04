@@ -1,0 +1,47 @@
+================
+Empty annotation
+================
+
+@
+
+---
+
+(acsl_annotation)
+
+==========================
+Empty multiline annotation
+==========================
+
+@
+@
+
+---
+
+(acsl_annotation)
+
+=====================
+Comment
+=====================
+
+// This is a comment @/ this is still a comment
+
+---
+
+(acsl_annotation
+  (comment))
+
+===================
+Requires expression
+===================
+
+requires a == 2 * 3;
+
+---
+
+(acsl_annotation
+  (requires_clause
+    (binary_expression
+      (identifier)
+      (binary_expression
+        (number_literal)
+        (number_literal)))))
