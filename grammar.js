@@ -96,6 +96,10 @@ module.exports = grammar({
     // Top level items are block items with the exception of the expression statement
     _top_level_item: $ => choice(
       $.requires_clause,
+      $.ensures_clause,
+      $.exits_clause,
+      $.terminates_clause,
+
       $.preproc_if,
       $.preproc_ifdef,
       $.preproc_include,
@@ -125,6 +129,25 @@ module.exports = grammar({
     requires_clause: $ => seq(
       optional($.clause_kind),
       'requires',
+      $.expression,
+      ';',
+    ),
+
+    ensures_clause: $ => seq(
+      optional($.clause_kind),
+      'ensures',
+      $.expression,
+      ';',
+    ),
+
+    exits_clause: $ => seq(
+      'exits',
+      $.expression,
+      ';',
+    ),
+
+    terminates_clause: $ => seq(
+      'terminates',
       $.expression,
       ';',
     ),
