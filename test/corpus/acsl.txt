@@ -62,3 +62,60 @@ requires \let x = 12; x + y;
       (binary_expression
         (identifier)
         (identifier)))))
+
+=================
+Forall expression
+=================
+
+requires \forall integer x; x == x;
+
+---
+
+(acsl_annotation
+  (requires_clause
+    (quantification_expression
+      (quantification_declaration
+        (type_identifier)
+        (identifier))
+    (binary_expression
+      (identifier)
+      (identifier)))))
+
+=================
+Exists expression
+=================
+
+requires \exists real x, y, integer i, struct dummy *d, t[];
+  &t[i] == d && x * y == i;
+
+---
+
+(acsl_annotation
+  (requires_clause
+    (quantification_expression
+      (quantification_declaration
+        (type_identifier)
+        (identifier)
+        (identifier))
+      (quantification_declaration
+        (type_identifier)
+        (identifier))
+      (quantification_declaration
+        (struct_specifier
+          (type_identifier))
+        (pointer_declarator
+          (identifier))
+        (array_declarator
+          (identifier)))
+      (binary_expression
+        (binary_expression
+          (pointer_expression
+            (subscript_expression
+              (identifier)
+              (identifier)))
+          (identifier))
+        (binary_expression
+          (binary_expression
+            (identifier)
+            (identifier))
+          (identifier))))))

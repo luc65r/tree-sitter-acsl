@@ -62,6 +62,7 @@ module.exports = grammar({
     [$._top_level_item, $._top_level_statement],
     [$.type_specifier, $._top_level_expression_statement],
     [$.type_qualifier, $.extension_expression],
+    [$.quantification_declaration],
   ],
 
   extras: $ => [
@@ -1043,12 +1044,18 @@ module.exports = grammar({
       $.expression,
     )),
 
+    quantification_declaration: $ => seq(
+      $._declaration_specifiers,
+      commaSep1($._declarator),
+    ),
+
     quantification_expression: $ => prec.left(PREC.BINDING, seq(
       choice('\\forall', '\\exists'),
       commaSep1(
-        $.declaration,
+        $.quantification_declaration,
       ),
       ';',
+      $.expression,
     )),
 
     assignment_expression: $ => prec.right(PREC.ASSIGNMENT, seq(
