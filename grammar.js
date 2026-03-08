@@ -101,6 +101,8 @@ module.exports = grammar({
       $.exits_clause,
       $.terminates_clause,
 
+      $.lemma_definition,
+
       $.preproc_if,
       $.preproc_ifdef,
       $.preproc_include,
@@ -151,6 +153,14 @@ module.exports = grammar({
       'terminates',
       $.expression,
       ';',
+    ),
+
+    lemma_definition: $ => seq(
+      'lemma',
+      $.identifier,
+      ':',
+      $.expression,
+      ';'
     ),
 
     // Preprocesser
