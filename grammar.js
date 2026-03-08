@@ -1017,6 +1017,7 @@ module.exports = grammar({
         $.expression,
       )),
       ';',
+      $.expression,
     )),
 
     quantification_expression: $ => prec.left(PREC.BINDING, seq(

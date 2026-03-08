@@ -45,3 +45,20 @@ requires a == 2 * 3;
       (binary_expression
         (number_literal)
         (number_literal)))))
+
+==============
+Let expression
+==============
+
+requires \let x = 12; x + y;
+
+---
+
+(acsl_annotation
+  (requires_clause
+    (binding_expression
+      (identifier)
+      (number_literal)
+      (binary_expression
+        (identifier)
+        (identifier)))))
